@@ -59,7 +59,8 @@ export default {
     data(){
         return{
             searchTerm: '',
-            billings: []
+            billings: [],
+            billingsDue: []
         }
     },
     methods: {
@@ -80,7 +81,7 @@ export default {
         this.billings = await new Promise( async(resolve, reject) => {
             try{
                 const res = await axios.get(url);
-                const data = res.data;
+                const data = res.data.billings;
                 JSON.stringify(data)
                 resolve(data);
             } catch(error){
@@ -90,6 +91,19 @@ export default {
             }
         })
         this.formatDate()
+
+        this.billingsDue = await new Promise( async(resolve, reject) => {
+            try{
+                const res = await axios.get(url);
+                const data = res.data.billingsDue;
+                JSON.stringify(data)
+                resolve(data);
+            } catch(error){
+                // this.error = true
+                // this.errorMessage = error
+                reject(error);
+            }
+        })
     },
     computed: {
         // filteredList: function() {

@@ -39,4 +39,12 @@ const billingSchema = new mongoose.Schema({
     },
 })
 
+class Billing {
+
+    getBillingNr() {
+        return `${this.nr}`
+    }
+
+}
+
 module.exports = mongoose.model('Billing', billingSchema);

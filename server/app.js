@@ -16,7 +16,7 @@ app.use(cors());
 const authRouter = require("./routes/auth")
 const contactsRouter = require("./routes/contacts")
 const clientsRouter = require("./routes/clients")
-const billingsRouter = require("./routes/billings")
+const billingsRouter = require("./routes/billing.routes")
 
 
 app.use("/auth", authRouter)
