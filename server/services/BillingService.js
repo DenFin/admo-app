@@ -1,4 +1,10 @@
-const Billing = require('../models/billing')
+const puppeteer = require('puppeteer')
+const fs = require('fs')
+
+
+const Billing = require('../models/billing.model')
+
+
 
 class BillingService {
 
@@ -12,21 +18,31 @@ class BillingService {
 
     async getAllBillings() {
         const billings = await Billing.find()
-            // console.log(billings)
-        const b = []
-        billings.forEach(billing => {
-
-            // console.log(billings)
-            if (billing.client == "KÖNIGSPUNKT GmbH") {
-                b.push(billing)
-            }
-
-        })
-        console.log(b)
-        return b;
-        // console.log(billings)
+        return billings
     }
 
+    async getBillingById(_id) {
+        const billing = await Billing.findById(_id)
+        return billing
+    }
+
+    async getBillingsDue() {
+        const billings = await Billing.find()
+        const billingsDue = []
+
+        billings.forEach(billing => {
+            if (billing.status === "paid") {
+                billingsDue.push(billing)
+            }
+        })
+
+        return billingsDue
+    }
+
+    async getBillingsCount() {
+        const billingsCount = await Billing.find().count()
+        return billingsCount
+    }
 
     isDue() {
         const billing = this;
@@ -42,6 +58,38 @@ class BillingService {
         }
     }
 
+
+    async createPDF() {
+
+        // launch a new chrome instance
+        const browser = await puppeteer.launch({
+            headless: true
+        })
+
+        // create a new page
+        const page = await browser.newPage()
+
+        // set your html as the pages content
+        const html = fs.readFileSync(`${__dirname}/../templates/billing-template.html`, 'utf8')
+        await page.setContent(html, {
+            waitUntil: 'domcontentloaded'
+        })
+
+        // create a pdf buffer
+        const pdfBuffer = await page.pdf({
+            format: 'A4'
+        })
+
+        // or a .pdf file
+        await page.pdf({
+            format: 'A4',
+            path: `${__dirname}/my-fance-invoice.pdf`
+        })
+
+        // close the browser
+        await browser.close()
+
+    }
 
 }
 

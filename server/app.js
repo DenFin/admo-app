@@ -14,7 +14,7 @@ app.use(express.json())
 app.use(cors());
 
 const authRouter = require("./routes/auth")
-const contactsRouter = require("./routes/contacts")
+const contactsRouter = require("./routes/contacts.routes")
 const clientsRouter = require("./routes/clients")
 const billingsRouter = require("./routes/billing.routes")
 

@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const Billing = require('../models/billing')
 
+const Billing = require('../models/billing.model')
 const BillingController = require('../controllers/billing.controller')
 
 
@@ -9,41 +9,32 @@ const BillingController = require('../controllers/billing.controller')
 
 router.get('/', BillingController.getBillings)
 
-// router.get('/', async(req, res) => {
-//     try {
-//         const billings = await BillingServiceInstance.getAllBillings()
-//         res.json(billings)
-//     } catch (error) {
-//         res.status(500).json({ message: error.message })
-//     }
+router.get('/due', BillingController.getBillingsDue)
 
+router.get('/count', BillingController.getBillingsCount)
 
-//     // try {
-//     //     const billings = await Billing.find()
-//     //     const billingsDue = getBillingsDue(billings)
-//     //     res.json({ billings, billingsDue })
-//     // } catch (error) {
-//     //     res.status(500).json({ message: error.message })
-//     // }
+router.get('/:id', BillingController.getBillingById)
+
+router.get('/create', BillingController.createBillingPdf)
+
+// router.get('/:id', getBilling, (req, res) => {
+
+//     const billing = new Billing({
+//         nr: res.billing.nr,
+//         client: res.billing.client,
+//         title: res.billing.title,
+//         date: res.billing.date,
+//         dateRangeStart: res.billing.dateRangeStart,
+//         dateRangeEnd: res.billing.dateRangeEnd,
+//         status: res.billing.status,
+//         items: res.billing.items,
+//         billingTotal: res.billing.billingTotal,
+//         billingTaxes: res.billing.billingTaxes,
+//         billingTotalWithTaxes: res.billing.billingTotalWithTaxes
+//     })
+//     console.log(req.body.nr)
+//     res.status(200).json(billing)
 // })
-
-router.get('/:id', getBilling, (req, res) => {
-
-    const billing = new Billing({
-        nr: req.body.nr,
-        client: req.body.client,
-        title: req.body.title,
-        date: req.body.date,
-        dateRangeStart: req.body.dateRangeStart,
-        dateRangeEnd: req.body.dateRangeEnd,
-        status: req.body.status,
-        items: req.body.items,
-        billingTotal: req.body.billingTotal,
-        billingTaxes: req.body.billingTaxes,
-        billingTotalWithTaxes: req.body.billingTotalWithTaxes
-    })
-    res.send(billing)
-})
 
 router.post('/', async(req, res) => {
     console.log(req.body.nr)
@@ -98,6 +89,15 @@ router.delete('/:id', getBilling, async(req, res) => {
     }
 })
 
+router.get('/due', async(req, res) => {
+    try {
+        const billings = await Billing.find()
+        res.json(billings)
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+})
+
 async function getBilling(req, res, next) {
     let billing;
     try {
@@ -111,58 +111,6 @@ async function getBilling(req, res, next) {
 
     res.billing = billing;
     next();
-}
-
-
-router.get('/due', async(req, res) => {
-    try {
-        const billings = await Billing.find()
-        res.json(billings)
-    } catch (error) {
-        res.status(500).json({ message: error.message })
-    }
-})
-
-// router.get('/due', async(req, res) => {
-//     try {
-//         const billings = await Billing.find()
-//             // const billingsDue = getBillingsDue(billings)
-
-//         res.json(billings)
-
-
-//     } catch (error) {
-//         res.status(500).json({ message: error.message })
-//     }
-// })
-
-function getBillingsDue(_billings) {
-
-    const billings = _billings
-    const billingsDue = []
-
-    billings.forEach(billing => {
-        if (isDue(billing)) {
-            billingsDue.push(billing)
-        }
-    });
-
-    return billingsDue;
-
-}
-
-function isDue(_billing) {
-
-    const billing = _billing
-    const today = new Date();
-    const paymentTarget = 14;
-
-    if (billing.date + paymentTarget >= today) {
-        return true;
-    } else {
-        return false;
-    }
-
 }
 
 
