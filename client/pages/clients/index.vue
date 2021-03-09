@@ -1,5 +1,11 @@
 <template>
-  <section>
+    <div id="content">
+        <main>
+            <pageHeadline headline="Kunden"></pageHeadline>
+            <clientsList></clientsList>
+        </main>
+    </div>
+  <!-- <section>
       <div class="jumbotron">
           <div class="container">
               <div class="row">
@@ -46,12 +52,20 @@
             </div>
         </div>
     </div>
-  </section>
+  </section> -->
 </template>
 
 <script>
 import axios from "axios"
+import pageHeadline from "./../../components/global/pageHeadline"
+import clientsList from "./../../components/clients/clientsList"
+
+
 export default {
+    components: {
+        pageHeadline,
+        clientsList
+    },
     data(){
         return{
             searchTerm: '',

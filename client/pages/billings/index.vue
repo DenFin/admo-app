@@ -81,7 +81,7 @@ export default {
         this.billings = await new Promise( async(resolve, reject) => {
             try{
                 const res = await axios.get(url);
-                const data = res.data.billings;
+                const data = res.data.data;
                 JSON.stringify(data)
                 resolve(data);
             } catch(error){

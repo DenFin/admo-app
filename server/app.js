@@ -24,5 +24,6 @@ app.use("/api/contacts", contactsRouter)
 app.use("/api/clients", clientsRouter)
 app.use("/api/billings", billingsRouter)
 
+app.use("/uploads", express.static('uploads'));
 
 app.listen(process.env.PORT, console.log(`Server started on port ${process.env.PORT}`));

@@ -12,6 +12,18 @@
            A new contact was added successfully to the database.
         </div>
       </div>
+      <div v-if="fileUploadComplete" class="toast show" role="alert" aria-live="assertive" aria-atomic="true" style="position: absolute; top: 1rem; right: 1rem;">
+        <div class="toast-header">
+            <strong class="mr-auto">Added contact</strong>
+            <small class="text-muted">Just now</small>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+           Datei erfolgreich hochgeladen.
+        </div>
+      </div>
       <div class="container">
           <div class="row">
               <div class="col-sm-12">
@@ -40,6 +52,11 @@
                         <div class="form-group">
                             <label for="">City</label>
                             <input v-model="contact.city" class="form-control" type="text">
+                        </div>
+                        <div class="custom-file mb-4">
+                            <input @change="onFileChanged" type="file" class="custom-file-input" id="customFile">
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                            <button @click="onUpload">Upload!</button>
                         </div>                        
                     </form>
                     <button class="btn btn-primary" @click="submit">Submit</button>
@@ -61,10 +78,12 @@ export default {
                 dob: new Date(),
                 street: '',
                 zip: '',
-                city: ''
+                city: '',
+                avatar: null
             },
             success: false,
-            error: false
+            error: false,
+            fileUploadComplete: false
         }
     },
     methods: {
@@ -94,6 +113,49 @@ export default {
             } catch (error) {
                 console.log(error)
             }
+        },
+        onFileChanged(event){
+            const file = event.target.files[0]
+            this.contact.avatar = file
+        },
+        async onUpload(event){
+            event.preventDefault()
+
+            const url = 'http://localhost:8000/api/contacts/avatar/upload'
+            const formData = new FormData();
+            
+            formData.append('file', this.contact.avatar);
+                let data;
+                await new Promise( async(resolve, reject) => {
+                    try {
+                       const res = await axios.post(url, formData, {
+                            onUploadProgress: progressEvent => {
+                                console.log(progressEvent.loaded / progressEvent.total)
+                                if(progressEvent.loaded === progressEvent.total){
+                                    this.fileUploadComplete = true
+                                    setTimeout( () => {
+                                        this.fileUploadComplete = false
+                                        console.log("TIMEOUT")
+                                    }, 3000)
+                                }
+                            }
+                        })
+
+                        data = res.data.file
+                        resolve(data)
+
+                    } catch (error) {
+                        reject(error);
+                    }
+                })
+
+                const filePath = `${data.destination}${data.filename}`
+                this.contact.avatar = filePath
+                console.log(data)
+                console.log(filePath)
+
+            
+            
         }
     }
 }

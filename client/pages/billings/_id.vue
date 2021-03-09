@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="pb-5">
     <div v-if="success" class="alert alert-success" role="alert">
         Änderungen gespeichert
     </div>
@@ -101,7 +101,7 @@ export default {
         this.billing = await new Promise( async(resolve, reject) => {
             try{
                 const res = await axios.get(url);
-                const data = res.data;
+                const data = res.data.data;
                 
                 console.log(data)
                 JSON.stringify(data)

@@ -1,19 +1,74 @@
 const express = require('express')
 const router = express.Router()
 const Contact = require('../models/contact.model')
+const ContactController = require('../controllers/contact.controller')
+const multer = require('multer')
 
-router.get('/', async(req, res) => {
-    try {
-        const contacts = await Contact.find()
-        const nextBirthdays = getNextBirthdays(contacts)
-        const recentBirthdays = getRecentBirthdays(contacts)
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    console.log(file.mimetype)
+    if (!allowedTypes.includes(file.mimetype)) {
+        const error = new Error("Incorrect file");
+        error.code = "INCORRECT_FILETYPE"
 
-        res.json({ contacts, nextBirthdays, recentBirthdays })
+        return cb(error, false)
+    }
 
-    } catch (error) {
-        res.status(500).json({ message: error.message })
+    cb(null, true)
+}
+
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + '.jpg') //Appending .jpg
     }
 })
+
+const upload = multer({
+    storage: storage
+})
+
+
+
+
+router.get('/', ContactController.getContacts)
+
+// router.post('/avatar/upload', ContactController.uploadAvatar)
+
+router.post('/avatar/upload', upload.single('file'), (req, res) => {
+    console.log(req.file)
+    res.json({ file: req.file })
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 router.get('/amount', getContactCount, async(req, res) => {
     // console.log("COUNT ROUTE")
@@ -35,13 +90,7 @@ router.get('/birthdays', async(req, res) => {
 router.get('/:id', getContact, (req, res) => {
 
     let bday = res.contact.dob
-        // console.log(bday)
-    let daysTillBirthday = getDaysTillBirthday(bday)
-    console.log(daysTillBirthday)
-
-    // res.send({
-    //     daysTillBirthay: daysTillBirthday
-    // })
+        // let daysTillBirthday = this.getDaysTillBirthday(bday)
 
     res.send({
         firstname: res.contact.firstname,
@@ -49,7 +98,8 @@ router.get('/:id', getContact, (req, res) => {
         dob: res.contact.dob,
         street: res.contact.street,
         zip: res.contact.zip,
-        city: res.contact.city
+        city: res.contact.city,
+        avatar: res.contact.avatar
     })
 })
 
@@ -60,7 +110,8 @@ router.post('/', async(req, res) => {
         dob: req.body.dob,
         street: req.body.street,
         zip: req.body.zip,
-        city: req.body.city
+        city: req.body.city,
+        avatar: req.body.avatar
     })
     try {
         const newcontact = await contact.save()
@@ -107,76 +158,8 @@ router.delete('/:id', async(req, res) => {
     }
 })
 
-function getNextBirthdays(contacts) {
-    let nextBirthdays = [];
-    contacts.forEach(contact => {
 
-        let daysTillBirthday = getDaysTillBirthday(contact.dob)
-        let age = calculateAge(contact.dob)
 
-        if (daysTillBirthday < 30 && daysTillBirthday > 0) {
-            console.log(`${contact.firstname}'s birthday is in ${daysTillBirthday} days`)
-            nextBirthdays.push({
-                firstname: contact.firstname,
-                days: daysTillBirthday,
-                age: age
-            })
-        }
-    })
-
-    // Returns object with next birthdays
-    return nextBirthdays
-}
-
-function getRecentBirthdays(contacts) {
-    let recentBirthdays = [];
-    contacts.forEach(contact => {
-
-        let daysTillBirthday = getDaysTillBirthday(contact.dob)
-        let age = calculateAge(contact.dob)
-
-        if (daysTillBirthday < 0 && daysTillBirthday > -30) {
-            console.log(`${contact.firstname}'s birthday was ${-daysTillBirthday} days ago`)
-            recentBirthdays.push({
-                firstname: contact.firstname,
-                days: daysTillBirthday,
-                age: age
-            })
-        }
-    })
-
-    // Returns object with next birthdays
-    return recentBirthdays
-}
-
-function calculateAge(_birthday) {
-    const now = new Date();
-    const year = now.getFullYear();
-    const birthdayYear = _birthday.getFullYear();
-    return year - birthdayYear;
-}
-
-function getDaysTillBirthday(_birthday) {
-    const birthday = birthdayDayOfYear(_birthday);
-    const today = dayOfTheYear();
-    return birthday - today;
-}
-
-function birthdayDayOfYear(date) {
-    const now = date;
-    const start = new Date(now.getFullYear(), 0, 0);
-    const diff = now - start;
-    const oneDay = 1000 * 60 * 60 * 24;
-    return Math.floor(diff / oneDay);
-}
-
-function dayOfTheYear() {
-    const now = new Date();
-    const start = new Date(now.getFullYear(), 0, 0);
-    const diff = now - start;
-    const oneDay = 1000 * 60 * 60 * 24;
-    return Math.floor(diff / oneDay);
-}
 
 async function getContact(req, res, next) {
     let contact;

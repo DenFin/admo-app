@@ -1,5 +1,7 @@
-const puppeteer = require('puppeteer')
-const fs = require('fs')
+const fs = require("fs");
+const path = require("path");
+const puppeteer = require('puppeteer');
+const handlebars = require("handlebars");
 
 
 const Billing = require('../models/billing.model')
@@ -22,7 +24,7 @@ class BillingService {
     }
 
     async getBillingById(_id) {
-        const billing = await Billing.findById(_id)
+        const billing = await Billing.findById(_id).lean()
         return billing
     }
 
@@ -58,8 +60,7 @@ class BillingService {
         }
     }
 
-
-    async createPDF() {
+    async createPDF(_billing) {
 
         // launch a new chrome instance
         const browser = await puppeteer.launch({
@@ -68,12 +69,39 @@ class BillingService {
 
         // create a new page
         const page = await browser.newPage()
+        const data = _billing;
+        data.items = JSON.parse(data.items)
+        data.date = this.formatDate(data.date)
+
+
+
 
         // set your html as the pages content
-        const html = fs.readFileSync(`${__dirname}/../templates/billing-template.html`, 'utf8')
+        const templateHtml = fs.readFileSync(`${__dirname}/pdf-template.html`, 'utf8')
+        const template = handlebars.compile(templateHtml);
+        const html = template(data);
+        const pdfPath = `${__dirname}/my-fance-invoice-4.pdf`
+
+
+        const options = {
+            width: '1230px',
+            headerTemplate: "<p></p>",
+            footerTemplate: "<p></p>",
+            displayHeaderFooter: false,
+            margin: {
+                top: "10px",
+                bottom: "30px"
+            },
+            printBackground: true,
+            path: pdfPath
+        }
+
+
         await page.setContent(html, {
             waitUntil: 'domcontentloaded'
         })
+
+        // await page.emulateMedia('screen');
 
         // create a pdf buffer
         const pdfBuffer = await page.pdf({
@@ -83,12 +111,24 @@ class BillingService {
         // or a .pdf file
         await page.pdf({
             format: 'A4',
-            path: `${__dirname}/my-fance-invoice.pdf`
+            path: `${__dirname}/${data.nr}.pdf`,
+            printBackground: true
         })
 
         // close the browser
         await browser.close()
 
+    }
+
+
+
+    formatDate(_date) {
+        let date = new Date(_date)
+        let day = date.getDate();
+        let year = date.getFullYear();
+        let month = date.getMonth();
+        month = date.toLocaleString('default', { month: 'long' });
+        return `${day}. ${month} ${year}`;
     }
 
 }

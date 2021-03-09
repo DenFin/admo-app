@@ -1,5 +1,6 @@
 <template>
-  <section class="pt-4">
+  <div id="content">
+    <section class="pt-4">
     <div class="container">
       <div class="row">
         <div class="col-sm-12 col-md-3">
@@ -17,6 +18,7 @@
       </div>
     </div>
   </section>
+  </div>
 </template>
 
 <script>

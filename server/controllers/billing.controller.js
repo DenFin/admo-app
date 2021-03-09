@@ -46,9 +46,10 @@ exports.getBillingById = async function(req, res, next) {
     const page = req.params.page ? req.params.page : 1;
     const limit = req.params.limit ? req.params.limit : 10;
     const id = req.params.id;
-    BillingServiceInstance.createPDF();
+
     try {
         const billing = await BillingServiceInstance.getBillingById(id)
+        BillingServiceInstance.createPDF(billing);
         return res.status(200).json({ status: 200, data: billing, message: "Succesfully billings Retrieved" });
     } catch (e) {
         return res.status(400).json({ status: 400, message: e.message });

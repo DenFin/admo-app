@@ -23,6 +23,9 @@ const contactSchema = new mongoose.Schema({
     city: {
         type: String,
         required: true
+    },
+    avatar: {
+        type: String,
     }
 })
 

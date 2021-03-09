@@ -28,16 +28,17 @@
                                 <div class="form-group">
                                     <label for="">Kunde</label>
                                     <select v-model="newBilling.client" class="form-control form-control-sm " name="" id="">
+                                        <option :value="null" disabled hidden>Bitte wähle einen Kunden aus</option>
                                         <option v-bind:key="client.name" v-for="client in clients" v-bind:value="client.name">{{ client.name }}</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Rechnungsnr.</label>
-                                    <input v-model="newBilling.nr" class="form-control form-control-sm" type="text">
+                                    <input v-model="newBilling.nr"  class="form-control form-control-sm" type="text">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Rechnungstitel</label>
-                                    <input v-model="newBilling.title" class="form-control form-control-sm" type="text">
+                                    <input placeholder="Rechnung Website Wartung" v-model="newBilling.title" class="form-control form-control-sm" type="text">
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-6">
@@ -47,8 +48,10 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="">Leistungszeitraum</label>
-                                    <input v-model="newBilling.dateRangeStart" class="mb-2 form-control form-control-sm" type="date">
-                                    <input v-model="newBilling.dateRangeEnd" class="form-control form-control-sm" type="date">
+                                    <div class="input-group">
+                                        <input v-model="newBilling.dateRangeStart" class="form-control form-control-sm" type="date">
+                                        <input v-model="newBilling.dateRangeEnd" class="form-control form-control-sm" type="date">
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Stunden- od. Tagessatz</label>
@@ -80,7 +83,7 @@
                             <tbody>
                                 <tr>
                                     <td><input step="1" value="0" class="position" type="number"></td>
-                                    <td><input class="activity" type="text"></td>
+                                    <td><textarea class="activity" type="text"></textarea></td>
                                     <td align="right" >
                                         <span class="rate" v-if="rate == 'hourlyRate'">{{ hourlyRate }}</span>
                                         <span class="rate" v-if="rate == 'dailyRate'">{{ dailyRate }}</span>
@@ -105,7 +108,10 @@
                             </tfoot>
                         </table>
                         <button class="btn btn-primary btn-sm" @click="addRow">Add new row</button>
+                        <div class="btn-group">
                         <button class="btn btn-success btn-sm" @click="saveBilling">Save billing</button>
+                        <button class="btn btn-secondary btn-sm" @click="submitAndBack">Submit and back</button>
+                        </div>
                     </div>
               </div>
           </div>
@@ -119,6 +125,8 @@ import axios from "axios"
 export default {
     data(){
         return{
+            billingNr: '',
+            billingsCount: 0,
             hourlyRate: 60,
             dailyRate: 450,
             rate: "hourlyRate",
@@ -145,6 +153,37 @@ export default {
         }
     },
     methods: {
+        async generateBillingNr(){
+            let billingCount = await this.fetchBillingsCount() + 1;
+            billingCount = billingCount.toString().padStart(3, '0');
+            const year = new Date().getFullYear()
+            this.newBilling.nr = `${year}-${billingCount}`
+
+            
+        },
+        generateDate(){
+            const date = new Date().toISOString().substr(0, 10);
+            // let day = date.getDate();
+            // let year = date.getFullYear();
+            // let month = date.getMonth()+1;
+            // month = date.toLocaleString('default', { month: 'short' });
+            // this.newBilling.date = `${day}.${month}.${year}`
+            this.newBilling.date = date
+            this.newBilling.dateRangeEnd = date
+        },
+        fetchBillingsCount(){
+            return new Promise(async(resolve, reject) => {
+                try {
+                    const url = 'http://localhost:8000/api/billings/count'
+                    const res = await axios.get(url);
+                    const data = res.data.data;
+                    this.billingsCount = data;
+                    resolve(data);
+                } catch (error) {
+                    reject(error);
+                }
+            })
+        },
         fetchClients(){
             return new Promise(async(resolve, reject) => {
                 try {
@@ -162,7 +201,7 @@ export default {
             let lastRow = document.querySelector("tbody tr:last-of-type")
             let str = ` 
                                     <td><input step="1" value="0" class="position" type="number"></td>
-                                    <td><input class="activity" type="text"></td>
+                                    <td><textarea class="activity" type="text"></textarea></td>
                                     <td align="right"><span class="rate"></span></td>
                                     <td align="right" ><input class="factor text-right" step="0.25" value="0"  type="number"></td>
                                     <td class="" align="right"><span class="amount"></span> €</td>`
@@ -200,7 +239,7 @@ export default {
             })
 
             this.newBilling.billingTotal = parseFloat(this.newBilling.billingTotal).toFixed(2)
-            this.newBilling.billingTaxes  = parseFloat(this.newBilling.billingTotal * 0.16).toFixed(2)
+            this.newBilling.billingTaxes  = parseFloat(this.newBilling.billingTotal * 0.19).toFixed(2)
             this.newBilling.billingTotalWithTaxes = (parseFloat(this.newBilling.billingTotal) + parseFloat(this.newBilling.billingTaxes)).toFixed(2)
 
     
@@ -294,20 +333,34 @@ export default {
             // });
            
 
+        },
+        async submitAndBack(){
+            try {
+                this.saveBilling();
+                this.$router.back()
+            } catch (error) {
+                console.log(error)
+            }
         }
     },
     async created(){
         this.clients = this.fetchClients();
+        this.billingsCount = this.fetchBillingsCount();
+        this.generateBillingNr();
+        this.generateDate();
     }
     
 }
 </script>
 
 <style>
-    input{
+    input, textarea{
         background: #343a40;
         border: none;
         color: #fff;
+    }
+    textarea{
+        width: 100%;
     }
     input:focus{
         outline-style: dotted;
