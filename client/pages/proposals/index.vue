@@ -1,8 +1,11 @@
 <template>
   <div id="content" class="pt-5">
       <main>
-          <pageHeadline headline="Angebote"></pageHeadline>
-          <proposalsList></proposalsList>
+          <div class="container d-flex align-items-center justify-content-between">
+                <pageHeadline headline="Angebote"></pageHeadline>
+                <createNewItemButton path="proposals/create" title="Neues Angebot hinzufügen"></createNewItemButton>
+            </div>
+          <proposalsList class="pt-3"></proposalsList>
       </main>
   </div>
 </template>

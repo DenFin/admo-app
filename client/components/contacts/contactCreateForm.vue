@@ -1,47 +1,49 @@
 <template>
-    <section>
-    <form action="">
+    <section class="panel pb-5">
+        <form action="">
             <div class="form-group">
-                <label for="">First Name</label>
+                <label for="">Vorname</label>
                 <input v-model="contact.firstname" class="form-control" type="text">
             </div>
             <div class="form-group">
-                <label for="">Last Name</label>
+                <label for="">Nachname</label>
                 <input v-model="contact.lastname" class="form-control" type="text">
             </div>
             <div class="form-group">
-                <label for="">D.O.B.</label>
+                <label for="">Geburtsdatum</label>
                 <input v-model="contact.dob" class="form-control" type="date">
             </div>
             <div class="form-group">
-                <label for="">Street</label>
+                <label for="">Straße</label>
                 <input v-model="contact.street" class="form-control" type="text">
             </div>
             <div class="form-group">
-                <label for="">ZIP</label>
+                <label for="">PLZ</label>
                 <input v-model="contact.zip" class="form-control" type="text">
             </div>
             <div class="form-group">
-                <label for="">City</label>
+                <label for="">Stadt</label>
                 <input v-model="contact.city" class="form-control" type="text">
             </div>
             <div class="form-group">
                 <label for="">Kategorie</label>
-                <select v-model="contact.category" class="form-control form-control-sm " name="" id="">
+                <select v-model="contact.category" class="form-control" name="" id="">
                     <option :value="null" disabled hidden>Bitte wähle eine Kategorie aus</option>
                     <option v-bind:key="category.name" v-for="category in contactCategories" v-bind:value="category.name">{{ category.name }}</option>
                 </select>
             </div>
+            <span>Profilbild</span>
             <div class="custom-file mb-4">
                 <input @change="onFileChanged" type="file" class="custom-file-input" id="customFile">
-                <label class="custom-file-label" for="customFile">Choose file</label>
-                <button @click="onUpload">Upload!</button>
+                <label class="custom-file-label" for="customFile"><span v-if="filename" :v-model="filename">{{ filename }}</span><span v-else>Datei aussuchen</span></label>
+                <button class="btn btn-primary btn-xl" @click="onUpload">Bild hochladen</button>
             </div>                        
         </form>
-        <button class="btn btn-primary" @click="submit">Submit</button>
-        <button class="btn btn-secondary" @click="submitAndBack">Submit and back</button>
-
-  </section>
+        <div class="mt-5">
+            <button class="btn btn-primary" @click="submit">Submit</button>
+            <button class="btn btn-secondary" @click="submitAndBack">Submit and back</button>
+        </div>
+    </section>
 </template>
 
 <script>
@@ -61,6 +63,7 @@ export default {
                 avatar: null,
                 category: null
             },
+            filename: null,
             contactCategories: null,
             success: false,
             error: false,
@@ -72,6 +75,7 @@ export default {
         async submit(){
             const url = "http://localhost:8000/api/contacts";  
             console.log("submit")
+            console.log(this.contact.avatar)
             try {
                 axios.post(url, this.contact)
                 this.success = true
@@ -97,7 +101,10 @@ export default {
         },
         onFileChanged(event){
             console.log("ON CHANGE")
+            
             const file = event.target.files[0]
+            console.log(file)
+            this.filename = file.name
             this.contact.avatar = file
         },
         async onUpload(event){
@@ -124,6 +131,11 @@ export default {
                         })
 
                         data = res.data.file
+                        const filePath = `${data.destination}${data.filename}`
+                        this.contact.avatar = filePath
+                        console.log("==========HERE========")
+                        console.log(data)
+                        console.log(filePath)
                         resolve(data)
 
                     } catch (error) {
@@ -131,10 +143,7 @@ export default {
                     }
                 })
 
-                const filePath = `${data.destination}${data.filename}`
-                this.contact.avatar = filePath
-                console.log(data)
-                console.log(filePath)
+                
 
             
             

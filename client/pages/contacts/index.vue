@@ -4,8 +4,8 @@
             <alertSuccess success="false"></alertSuccess>
             <alertError error="false"></alertError>
             <div class="container d-flex align-items-center justify-content-between">
-            <pageHeadline headline="Kontakte"></pageHeadline>
-            <createNewItemButton path="contacts/create" title="Neuen Kontakt hinzufügen"></createNewItemButton>
+                <pageHeadline headline="Kontakte"></pageHeadline>
+                <createNewItemButton path="contacts/create" title="Neuen Kontakt hinzufügen"></createNewItemButton>
             </div>
             <contactsSubmenu></contactsSubmenu>
             <contactsList></contactsList>

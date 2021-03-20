@@ -1,19 +1,21 @@
 <template>
   <section class="section-contact-detail">
-      <div class="container">
+      <div class="container" v-if="contact" >
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="contact"  v-if="contact" >
-                        <figure class="contact__avatar">
-                        <img v-if="contact.avatar" :src="'http://localhost:8000/' + contact.avatar" alt="">
-                        <div v-else>
-                            <input @change="onFileChanged" type="file" class="custom-file-input" id="customFile">
-                            <label class="custom-file-label" for="customFile">Choose file</label>
-                            <button @click="onUpload">Upload!</button>
-                        </div>
+                    <div class="contact"  >
+                    <figure v-if="contact.avatar" class="contact__avatar">
+                        <img   :src="`http://localhost:8000/${contact.avatar}`" />
                     </figure>
-                    <h1>{{contact.firstname}} {{contact.lastname}}</h1>
-
+                    <div>
+                        <!-- <contactAvatarUpload :contact="contact"></contactAvatarUpload> -->
+                        <div class="custom-file mb-4">
+                            <input @change="onFileChanged" type="file" class="custom-file-input" id="customFile">
+                            <label class="custom-file-label" for="customFile"><span v-if="filename" :v-model="filename">{{ filename }}</span><span v-else>Datei aussuchen</span></label>
+                            <button class="btn btn-primary btn-xl" @click="onUpload">Bild hochladen</button>
+                        </div>  
+                    </div>
+                    <pageHeadline v-if="contact" :headline="`${contact.firstname} ${contact.lastname}`"></pageHeadline>
                     <table class="table table-dark table-bordered table-">
                         <tr>
                             <th>Vorname</th>
@@ -53,18 +55,30 @@
 
 <script>
 import axios from "axios";
+import pageHeadline from "./../../components/global/pageHeadline"
+import contactAvatarUpload from "./../../components/contacts/contactAvatarUpload"
+import * as ContactService from "./../../services/contacts/ContactService"
  
 export default {
     name: 'contactDetail',
+    components: {
+        pageHeadline,
+        contactAvatarUpload
+    },
     data(){
         return{
             error: false,
             success: false,
             contact: null,
             nextBirthday: null,
-            updatedcontact: {
-                
-            }
+            updatedContact: {
+                avatar: null
+            },
+            filename: null,
+            contactCategories: null,
+            success: false,
+            error: false,
+            fileUploadComplete: false
         }
     },
     methods: {
@@ -73,7 +87,10 @@ export default {
         },
         onFileChanged(event){
             console.log("ON CHANGE")
+            
             const file = event.target.files[0]
+            console.log(file)
+            this.filename = file.name
             this.contact.avatar = file
         },
         async onUpload(event){
@@ -100,20 +117,17 @@ export default {
                         })
 
                         data = res.data.file
+                        const filePath = `${data.destination}${data.filename}`
+                        this.contact.avatar = filePath
+                        console.log("==========HERE========")
+                        console.log(data)
+                        console.log(filePath)
                         resolve(data)
 
                     } catch (error) {
                         reject(error);
                     }
-                })
-
-                const filePath = `${data.destination}${data.filename}`
-                this.contact.avatar = filePath
-                console.log(data)
-                console.log(filePath)
-
-            
-            
+                })  
         },
         async save(){
             let id = this.$route.params.id
@@ -131,25 +145,12 @@ export default {
             }
         }
     },
-    async created(){
-        let id = this.$route.params.id
+    async fetch(){
+        const id = this.$route.params.id
         const url = `http://localhost:8000/api/contacts/${id}`
-        this.contact = await new Promise( async(resolve, reject) => {
-            try{
-                const res = await axios.get(url);
-                const data = res.data.data.contact;
-                
-                console.log(data)
-                JSON.stringify(data)
-                resolve(data);
-            } catch(error){
-                
-                // this.errorMessage = error
-                reject(error);
-            }
-            
-        })
-    },
+        this.contact = await ContactService.fetchContactById(url)
+        this.contact.avatar = this.contact.avatar.replace(/['"]+/g, '')
+    }
 }
 </script>
 
@@ -165,4 +166,19 @@ export default {
         width: 100%
         height: 100%
         object-fit: cover
+table
+    table-layout: fixed
+td
+    position: relative
+    input
+        color: #fff
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        background: transparent
+        width: 100%
+        border: none
+
 </style>

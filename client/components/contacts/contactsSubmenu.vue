@@ -14,8 +14,8 @@
                                 </div>
                             </div>
                             
-                            <nuxt-link to="/contacts/birthdays" class="btn btn-sm btn-primary">Geburtstage</nuxt-link>
-                            <nuxt-link to="/contacts/categories" class="btn btn-sm btn-primary">Kategorien</nuxt-link>
+                            <nuxt-link to="/contacts/birthdays" class="btn btn-sm btn-primary d-flex align-items-center">Geburtstage</nuxt-link>
+                            <nuxt-link to="/contacts/categories" class="btn btn-sm btn-primary d-flex align-items-center">Kategorien</nuxt-link>
                         </div>
                     </div>
                 </div>
@@ -30,9 +30,10 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.btn-primary
-    background: rgb(4, 34, 47) !important
-    border-color: rgb(4, 34, 47) !important
+.btn-primary, .btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle
+    background: rgb(4, 34, 47) 
+    border-color: rgb(4, 34, 47)
+
 .nuxt-link-exact-active
     background: #f8b572 !important
     border-color: #f8b572 !important

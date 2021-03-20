@@ -1,8 +1,11 @@
 <template>
     <div id="content" class="pt-5">
         <main>
-            <pageHeadline headline="Kunden"></pageHeadline>
-            <clientsList></clientsList>
+            <div class="container d-flex align-items-center justify-content-between">
+                <pageHeadline headline="Kunden"></pageHeadline>
+                <createNewItemButton path="clients/create" title="Neuen Kunden hinzufügen"></createNewItemButton>
+            </div>
+            <clientsList class="pt-3"></clientsList>
         </main>
     </div>
 </template>

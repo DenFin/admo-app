@@ -4,13 +4,15 @@ const multer = require('multer')
 class ContactService {
 
 
-    constructor(_firstname, _lastname, _dob, _street, _zip, _city) {
+    constructor(_firstname, _lastname, _dob, _street, _zip, _city, _avatar, _category) {
         this.firstname = _firstname;
         this.lastname = _lastname;
         this.dob = _dob;
         this.street = _street;
         this.zip = _zip;
         this.city = _city;
+        this.avatar = _avatar;
+        this.category = _category;
     }
 
 
@@ -58,7 +60,7 @@ class ContactService {
             street: req.body.street,
             zip: req.body.zip,
             city: req.body.city,
-            avatar: req.body.avatar,
+            avatar: JSON.stringify(req.body.avatar),
             category: req.body.category
         })
         try {
@@ -81,7 +83,9 @@ class ContactService {
                 dob: req.body.dob,
                 street: req.body.street,
                 zip: req.body.zip,
-                city: req.body.city
+                city: req.body.city,
+                avatar: req.body.avatar,
+                category: req.body.category
             })
 
             contact = updatedContact

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Sidebar></Sidebar>
-    <Nuxt />
+    <Nuxt class="pb-6" />
   </div>
 </template>
 <script>
@@ -16,8 +16,13 @@ export default{
 <style>
 @import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css";
 
+.pb-6{
+  padding-bottom: 600px;
+}
+
 body{
   font-family: "Merriweather", serif;
+  overflow-y: scroll;
 }
 
 #__layout > div{
