@@ -5,11 +5,9 @@
   </div>
 </template>
 <script>
-import Header from "./../components/Header"
 import Sidebar from "./../components/global/sidebar"
 export default{
   components: {
-      Header,
       Sidebar
     }
 }

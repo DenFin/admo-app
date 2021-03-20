@@ -1,16 +1,26 @@
 <template>
-  <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="btn-group btn-group-sm">
-                            <nuxt-link to="/contacts" class="btn btn-sm btn-primary">Alle Kontakte</nuxt-link>
+                            <div class="dropdown show">
+                                <nuxt-link to="/contacts" class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Alle Kontakte</nuxt-link>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    
+                                    <nuxt-link to="/contacts/friends" class="dropdown-item">Freunde</nuxt-link>
+                                    <nuxt-link to="/contacts/family" class="dropdown-item">Familie</nuxt-link>
+                                    <nuxt-link to="/contacts/clients" class="dropdown-item">Kunden</nuxt-link>
+                                </div>
+                            </div>
+                            
                             <nuxt-link to="/contacts/birthdays" class="btn btn-sm btn-primary">Geburtstage</nuxt-link>
+                            <nuxt-link to="/contacts/categories" class="btn btn-sm btn-primary">Kategorien</nuxt-link>
                         </div>
                     </div>
                 </div>
             </div>
-        </nav>
+    </nav>
 </template>
 
 <script>

@@ -1,6 +1,8 @@
 const Contact = require('../models/contact.model')
+const multer = require('multer')
 
 class ContactService {
+
 
     constructor(_firstname, _lastname, _dob, _street, _zip, _city) {
         this.firstname = _firstname;
@@ -12,10 +14,130 @@ class ContactService {
     }
 
 
+
     async getAllContacts() {
         const contacts = await Contact.find();
         return contacts;
     }
+
+    async getContactAmount(req, res) {
+        console.log("IN SERVICE")
+        let contactCount;
+
+        try {
+            console.log("IN TRY")
+            contactCount = await Contact.countDocuments({}, function(err, count) {
+                return count
+            });
+
+        } catch (error) {
+            console.log({ message: error.message })
+        }
+
+        return contactCount
+    }
+
+    async getContactById(req, res) {
+        let contact;
+        try {
+            contact = await Contact.findById(req.params.id);
+            if (contact == null) {
+                return res.status(404).json({ message: 'Cannot find contact' })
+            }
+        } catch (error) {
+            return res.status(500).json({ message: error.message })
+        }
+        return contact;
+    }
+
+    async createContact(req, res) {
+        const contact = new Contact({
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            dob: req.body.dob,
+            street: req.body.street,
+            zip: req.body.zip,
+            city: req.body.city,
+            avatar: req.body.avatar,
+            category: req.body.category
+        })
+        try {
+            await contact.save()
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    async updateContactById(req, res) {
+        let contact;
+        let updatedContact
+        try {
+
+            contact = await Contact.findById(req.params.id);
+
+            updatedContact = new Contact({
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                dob: req.body.dob,
+                street: req.body.street,
+                zip: req.body.zip,
+                city: req.body.city
+            })
+
+            contact = updatedContact
+            await contact.save()
+            res.json(updatedContact)
+
+        } catch (error) {
+            res.status(400).json({ message: error.message })
+        }
+    }
+
+    async deleteContactById(req, res) {
+        try {
+            const removedPost = await Contact.deleteOne({ _id: req.params.id })
+            res.json(removedPost)
+        } catch (error) {
+            res.status(500).json({ message: error.message })
+        }
+    }
+
+    async uploadAvatar(req, res) {
+        const fileFilter = (req, file, cb) => {
+            const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+            console.log(file.mimetype)
+            if (!allowedTypes.includes(file.mimetype)) {
+                const error = new Error("Incorrect file");
+                error.code = "INCORRECT_FILETYPE"
+
+                return cb(error, false)
+            }
+
+            cb(null, true)
+        }
+
+        const storage = multer.diskStorage({
+            destination: function(req, file, cb) {
+                cb(null, 'uploads/')
+            },
+            filename: function(req, file, cb) {
+                cb(null, Date.now() + '.jpg') //Appending .jpg
+            }
+        })
+
+        const upload = multer({
+            storage: storage
+        })
+
+        try {
+            upload.single('file')
+        } catch (error) {
+
+        }
+    }
+
+
+
 
     getNextBirthdays(contacts) {
         let nextBirthdays = [];
@@ -46,7 +168,7 @@ class ContactService {
             let age = this.calculateAge(contact.dob)
 
             if (daysTillBirthday < 0 && daysTillBirthday > -30) {
-                console.log(`${contact.firstname}'s birthday was ${-daysTillBirthday} days ago`)
+                // console.log(`${contact.firstname}'s birthday was ${-daysTillBirthday} days ago`)
                 recentBirthdays.push({
                     firstname: contact.firstname,
                     days: daysTillBirthday,

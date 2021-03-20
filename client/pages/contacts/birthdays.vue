@@ -1,7 +1,13 @@
 <template>
-  <div id="content">
+  <div id="content" class="pt-5">
         <main>
-            <Jumbotron headline="Kontakte"></Jumbotron>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <pageHeadline headline="Geburtstage"></pageHeadline>
+                    </div>
+                </div>
+            </div>
             <contactsSubmenu></contactsSubmenu>
             <contactsNextBirthdaysList></contactsNextBirthdaysList>
         </main>
@@ -9,9 +15,11 @@
 </template>
 
 <script>
+import pageHeadline from "./../../components/global/pageHeadline"
 import contactsNextBirthdaysList from "./../../components/contacts/contactsBirthdays"
 export default {
     components: {
+        pageHeadline,
         contactsNextBirthdaysList
     }
 }

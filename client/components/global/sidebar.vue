@@ -15,6 +15,12 @@
               <li class="nav-item">
                   <nuxt-link class="nav-link" to="/billings">Rechnungen</nuxt-link>
               </li>
+              <li class="nav-item">
+                  <nuxt-link class="nav-link" to="/proposals">Angebote</nuxt-link>
+              </li>
+              <li class="nav-item">
+                  <nuxt-link class="nav-link" to="/revenues">Umsätze</nuxt-link>
+              </li>
           </ul>
       </nav>
   </aside>

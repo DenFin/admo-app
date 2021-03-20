@@ -34,7 +34,7 @@ export default {
         this.contactCount = await new Promise( async(resolve, reject) => {
             try{
                 const res = await axios.get(url);
-                const data = res.data;
+                const data = res.data.data.contactCount;
                 JSON.stringify(data)
                 resolve(data);
             } catch(error){

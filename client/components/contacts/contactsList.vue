@@ -1,10 +1,10 @@
 <template>
     <section class="contactsList">
         <div class="container">
-            <div class="row pt-3">
+            <div v-if="contacts" class="row pt-3">
                 <div class="col-sm-12">
                     <div>
-                        <table class="table table-dark table-bordered">
+                        <table class="table table-dark table-bordered table-sm table-condensed">
                             <thead>
                                 <th>Vorname</th>
                                 <th>Nachname</th>
@@ -15,27 +15,33 @@
                                 <th>Actions</th>
                             </thead>
                             <tbody>
-                                    <tr v-bind:key="contact.name" v-for="contact in contacts">
-                                        
-                                        <td><nuxt-link :to="`/contacts/${contact._id}`">{{ contact.firstname }}</nuxt-link></td>
-                                        <td>{{ contact.lastname }}</td>
-                                        <td>{{ contact.dob }}</td>
-                                        <td>{{ contact.street }}</td>
-                                        <td>{{ contact.zip }}</td>
-                                        <td>{{ contact.city }}</td>
-                                        <td>
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item" href="#"><span :data-id="contact._id" @click="openModal(contact._id)" class="i i--delet">Kontakt löschen</span></a>
-                                                </div>
-                                                </div>
-                                            </td>
-                                    </tr>
+                                <tr v-bind:key="contact.name" v-for="contact in contacts">
+                                    
+                                    <td><nuxt-link :to="`/contacts/${contact._id}`">{{ contact.firstname }}</nuxt-link></td>
+                                    <td>{{ contact.lastname }}</td>
+                                    <td>{{ contact.dob }}</td>
+                                    <td>{{ contact.street }}</td>
+                                    <td>{{ contact.zip }}</td>
+                                    <td>{{ contact.city }}</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <nuxt-link class="dropdown-item" :to="`/contacts/${contact._id}`">Kontakt bearbeiten</nuxt-link>
+                                                <a class="dropdown-item" href="#"><span :data-id="contact._id" @click="openModal(contact._id)" class="i i--delet">Kontakt löschen</span></a>
+                                            </div>
+                                            </div>
+                                        </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+            <div v-else class="row">
+                <div class="col-sm-12">
+                    <p>Keine Kontakt vorhanden.</p>
                 </div>
             </div>
         </div>
@@ -71,7 +77,7 @@ export default {
     data(){
         return{
             searchTerm: '',
-            contacts: [],
+            contacts: null,
             nextBirthdays: [],
             recentBirthdays: [],
             popupActive: false,
@@ -99,6 +105,7 @@ export default {
             try {
                 await axios.delete(url)
                 this.fetchContacts()
+                this.popupActive = false;
             } catch (error) {
                 // TODO: handle error
                 console.error(error)
@@ -163,38 +170,8 @@ export default {
         }
     },
     async fetch(){
-
-        
         this.contacts = await ContactService.fetchContacts()
         this.formatDate();
-
-        // this.nextBirthdays = await new Promise( async(resolve, reject) => {
-        //     try{
-        //         const res = await axios.get(url);
-        //         const data = res.data.data.nextBirthdays;
-        //         JSON.stringify(data)
-        //         resolve(data);
-        //     } catch(error){
-        //         this.error = true
-        //         this.errorMessage = error
-        //         reject(error);
-        //     }
-        // })
-
-        // this.recentBirthdays = await new Promise( async(resolve, reject) => {
-        //     try{
-        //         const res = await axios.get(url);
-        //         const data = res.data.data.recentBirthdays;
-        //         JSON.stringify(data)
-        //         resolve(data);
-        //     } catch(error){
-        //         this.error = true
-        //         this.errorMessage = error
-        //         reject(error);
-        //     }
-        // })
-        
-
     },
     computed: {
         filteredList: function() {
@@ -217,4 +194,8 @@ a
     background:#04222f
 .table-dark td, .table-dark th, .table-dark thead th
     border-color: #063144
+
+.active
+    opacity: 1 !important
+    display: block
 </style>

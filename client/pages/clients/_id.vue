@@ -1,5 +1,17 @@
 <template>
-  <section>
+    <div id="content" class="pt-5">
+        <main>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <pageHeadline v-if="client" :headline="`${client.name}`"></pageHeadline>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+  <!-- <section>
     <div v-if="success" class="alert alert-success" role="alert">
         A simple success alert—check it out!
     </div>
@@ -9,7 +21,7 @@
       <div class="container">
           <div class="row">
               <div class="col-sm-12">
-                  <h1>Client</h1>
+                  <pageHeadline v-if="client" :headline="`${client.name}`"></pageHeadline>
                   <table v-if="client" class="table table-dark table-bordered table-">
                     <tr>
                     <th>Kunde</th>
@@ -33,12 +45,17 @@
               </div>
           </div>
       </div>
-  </section>
+  </section> -->
 </template>
 
 <script>
 import axios from "axios"
+import pageHeadline from "./../../components/global/pageHeadline"
+
 export default {
+    components: {
+        pageHeadline
+    },
     data(){
         return{
             error: false,

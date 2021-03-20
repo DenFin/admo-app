@@ -1,27 +1,27 @@
 <template>
     <section class="contactsList">
         <div class="container">
-            <div class="row pt-3">
+            <div class="row">
                 <div class="col-sm-12">
                     <div>
-                        <table class="table table-dark table-bordered">
-                    <thead>
-                        <th>Name</th>
-                        <th>Street</th>
-                        <th>ZIP</th>
-                        <th>City</th>
-                        <th>Actions</th>
-                    </thead>
-                    <tbody>
-                        <tr v-bind:key="client.name" v-for="client in clients">
-                            <td><nuxt-link :to="`/clients/${client._id}`">{{ client.name }}</nuxt-link></td>
-                            <td>{{ client.street }}</td>
-                            <td>{{ client.zip }}</td>
-                            <td>{{ client.city }}</td>
-                            <td><span class="i"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
+                        <table class="table table-dark table-bordered table-sm table-condensed">
+                            <thead>
+                                <th>Name</th>
+                                <th>Street</th>
+                                <th>ZIP</th>
+                                <th>City</th>
+                                <th>Actions</th>
+                            </thead>
+                            <tbody>
+                                <tr v-bind:key="client.name" v-for="client in clients">
+                                    <td><nuxt-link :to="`/clients/${client._id}`">{{ client.name }}</nuxt-link></td>
+                                    <td>{{ client.street }}</td>
+                                    <td>{{ client.zip }}</td>
+                                    <td>{{ client.city }}</td>
+                                    <td><span class="i"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

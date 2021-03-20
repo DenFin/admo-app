@@ -26,6 +26,9 @@ const contactSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
+    },
+    category: {
+        type: String,
     }
 })
 
