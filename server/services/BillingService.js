@@ -46,6 +46,28 @@ class BillingService {
         return billingsCount
     }
 
+    async createBilling(_billing) {
+        const billing = new Billing({
+            nr: _billing.nr,
+            client: _billing.client,
+            title: _billing.title,
+            date: _billing.date,
+            dateRangeStart: _billing.dateRangeStart,
+            dateRangeEnd: _billing.dateRangeEnd,
+            status: _billing.status,
+            items: _billing.items,
+            billingTotal: _billing.billingTotal,
+            billingTaxes: _billing.billingTaxes,
+            billingTotalWithTaxes: _billing.billingTotalWithTaxes
+        })
+        try {
+            await billing.save()
+            return billing
+        } catch (error) {
+            return error
+        }
+    }
+
     isDue() {
         const billing = this;
         const today = new Date();

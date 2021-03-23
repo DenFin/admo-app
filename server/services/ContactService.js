@@ -18,7 +18,12 @@ class ContactService {
 
 
     async getAllContacts() {
-        const contacts = await Contact.find();
+        const contacts = await Contact.find()
+        return contacts;
+    }
+
+    async getContactsByCategory(_cat) {
+        const contacts = await Contact.find({ category: _cat });
         return contacts;
     }
 
@@ -74,23 +79,29 @@ class ContactService {
         let contact;
         let updatedContact
         try {
+            const query = { _id: req.params.id };
+            const updatedContact = {
+                $set: {
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname,
+                    dob: req.body.dob,
+                    street: req.body.street,
+                    zip: req.body.zip,
+                    city: req.body.city,
+                    avatar: req.body.avatar,
+                    category: req.body.category
+                }
+            }
 
-            contact = await Contact.findById(req.params.id);
+            const options = { "upsert": true };
+            Contact.updateOne(query, updatedContact, options).then(result => {
+                    const { matchedCount, modifiedCount } = result;
+                    if (matchedCount && modifiedCount) {
+                        console.log(`Successfully added a new review.`)
+                    }
+                })
+                .catch(err => console.error(`Failed to add review: ${err}`))
 
-            updatedContact = new Contact({
-                firstname: req.body.firstname,
-                lastname: req.body.lastname,
-                dob: req.body.dob,
-                street: req.body.street,
-                zip: req.body.zip,
-                city: req.body.city,
-                avatar: req.body.avatar,
-                category: req.body.category
-            })
-
-            contact = updatedContact
-            await contact.save()
-            res.json(updatedContact)
 
         } catch (error) {
             res.status(400).json({ message: error.message })

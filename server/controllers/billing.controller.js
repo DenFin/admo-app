@@ -1,6 +1,10 @@
 const BillingService = require("../services/BillingService");
 const BillingServiceInstance = new BillingService();
 
+const RevenueService = require("../services/RevenueService")
+const RevenueServiceInstance = new RevenueService()
+
+
 exports.getBillings = async function(req, res, next) {
     // Validate request parameters, queries using express-validator
 
@@ -53,6 +57,23 @@ exports.getBillingById = async function(req, res, next) {
         return res.status(200).json({ status: 200, data: billing, message: "Succesfully billings Retrieved" });
     } catch (e) {
         return res.status(400).json({ status: 400, message: e.message });
+    }
+}
+
+exports.createBilling = async function(req, res, next) {
+    try {
+        await BillingServiceInstance.createBilling(req.body);
+        next();
+    } catch (error) {
+        return res.status(500).json({ status: 500, message: error.message });
+    }
+}
+
+exports.addBillingToRevenues = async function(req, res, next) {
+    try {
+        await RevenueServiceInstance.addBillingToRevenues(req, res)
+    } catch (error) {
+        console.log(error)
     }
 }
 

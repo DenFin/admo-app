@@ -17,47 +17,8 @@ router.get('/:id', BillingController.getBillingById)
 
 router.get('/create', BillingController.createBillingPdf)
 
-// router.get('/:id', getBilling, (req, res) => {
+router.post('/', BillingController.createBilling, BillingController.addBillingToRevenues)
 
-//     const billing = new Billing({
-//         nr: res.billing.nr,
-//         client: res.billing.client,
-//         title: res.billing.title,
-//         date: res.billing.date,
-//         dateRangeStart: res.billing.dateRangeStart,
-//         dateRangeEnd: res.billing.dateRangeEnd,
-//         status: res.billing.status,
-//         items: res.billing.items,
-//         billingTotal: res.billing.billingTotal,
-//         billingTaxes: res.billing.billingTaxes,
-//         billingTotalWithTaxes: res.billing.billingTotalWithTaxes
-//     })
-//     console.log(req.body.nr)
-//     res.status(200).json(billing)
-// })
-
-router.post('/', async(req, res) => {
-    console.log(req.body.nr)
-    const billing = new Billing({
-        nr: req.body.nr,
-        client: req.body.client,
-        title: req.body.title,
-        date: req.body.date,
-        dateRangeStart: req.body.dateRangeStart,
-        dateRangeEnd: req.body.dateRangeEnd,
-        status: req.body.status,
-        items: req.body.items,
-        billingTotal: req.body.billingTotal,
-        billingTaxes: req.body.billingTaxes,
-        billingTotalWithTaxes: req.body.billingTotalWithTaxes
-    })
-    try {
-        const newBilling = await billing.save()
-        res.status(201).json(newBilling)
-    } catch (error) {
-        res.status(400).json(error.message)
-    }
-})
 
 router.patch('/:id', getBilling, async(req, res) => {
     if (req.body != null) {

@@ -33,6 +33,7 @@ export default {
 .btn-primary, .btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle
     background: rgb(4, 34, 47) 
     border-color: rgb(4, 34, 47)
+    font-size: 14px
 
 .nuxt-link-exact-active
     background: #f8b572 !important

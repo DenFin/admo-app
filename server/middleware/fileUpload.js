@@ -6,7 +6,7 @@ const baseDir = 'uploads/'
 const currentYear = new Date().getFullYear()
 const currentMonth = new Date().getMonth() + 1
 const currentYearDir = `${baseDir}${currentYear}`
-const currentMonthDir = `${baseDir}${currentYear}/${currentMonth}`
+const currentMonthDir = `${baseDir}${currentYear}/${currentMonth}/`
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {

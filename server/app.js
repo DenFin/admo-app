@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.set('useFindAndModify', false);
 const db = mongoose.connection
 
 db.on('error', (error) => console.log(error))

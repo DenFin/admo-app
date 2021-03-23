@@ -18,7 +18,7 @@ import billingsList from "./../../components/billings/billingsList"
 export default {
     components: {
         pageHeadline,
-        billingsList
+        billingsList,
     }
 }
 </script>

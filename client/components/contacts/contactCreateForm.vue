@@ -1,5 +1,7 @@
 <template>
     <section class="panel pb-5">
+        <alertSuccess :success="success"></alertSuccess>
+        <alertError :error="error"></alertError>
         <form action="">
             <div class="form-group">
                 <label for="">Vorname</label>
@@ -37,7 +39,10 @@
                 <input @change="onFileChanged" type="file" class="custom-file-input" id="customFile">
                 <label class="custom-file-label" for="customFile"><span v-if="filename" :v-model="filename">{{ filename }}</span><span v-else>Datei aussuchen</span></label>
                 <button class="btn btn-primary btn-xl" @click="onUpload">Bild hochladen</button>
-            </div>                        
+            </div>
+            <div v-if="uploading" class="progress">
+            <div class="progress-bar" role="progressbar" :style="`width: ${progress}%`" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>                       
         </form>
         <div class="mt-5">
             <button class="btn btn-primary" @click="submit">Submit</button>
@@ -49,8 +54,16 @@
 <script>
 import axios from "axios"
 import * as ContactCategoryService from "./../../services/contacts/ContactCategoryService"
+
+import alertSuccess from "./../alerts/alertSuccess"
+import alertError from "./../alerts/alertError"
+
 export default {
     name: 'contactCreateForm',
+    components: {
+        alertSuccess,
+        alertError
+    },
     data(){
         return{
             contact: {
@@ -67,7 +80,8 @@ export default {
             contactCategories: null,
             success: false,
             error: false,
-            fileUploadComplete: false
+            fileUploadComplete: false,
+            uploading: false
         }
     },
     methods: {
@@ -120,10 +134,15 @@ export default {
                        const res = await axios.post(url, formData, {
                             onUploadProgress: progressEvent => {
                                 console.log(progressEvent.loaded / progressEvent.total)
+                                console.log(progressEvent)
+                                this.uploading = true
+                                let progress = Math.round( (progressEvent.loaded * 100) / progressEvent.total )
+                                this.progress = progress
                                 if(progressEvent.loaded === progressEvent.total){
                                     this.fileUploadComplete = true
                                     setTimeout( () => {
                                         this.fileUploadComplete = false
+                                        this.uploading = false
                                         console.log("TIMEOUT")
                                     }, 3000)
                                 }

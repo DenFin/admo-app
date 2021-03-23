@@ -33,11 +33,25 @@ export async function fetchNextBirthdays() {
 }
 
 export async function fetchContactById(_url) {
-    console.log(_url)
     return new Promise(async(resolve, reject) => {
         try {
             const res = await axios.get(_url);
             const data = res.data.data.contact;
+            JSON.stringify(data)
+            resolve(data);
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
+
+export async function fetchContactsByCategory(_cat) {
+    const url = `http://localhost:8000/api/contacts?cat=${_cat}`
+    return new Promise(async(resolve, reject) => {
+        try {
+            const res = await axios.get(url);
+            const data = res.data.data.contacts;
+            console.log(data)
             JSON.stringify(data)
             resolve(data);
         } catch (error) {

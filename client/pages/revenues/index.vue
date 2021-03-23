@@ -1,10 +1,17 @@
 <template>
   <div id="content" class="pt-5">
       <main>
-          <pageHeadline headline="Umsätze"></pageHeadline>
+          <div class="container">
+              <div class="row">
+                  <div class="col-sm-12">
+                      <pageHeadline headline="Umsätze"></pageHeadline>
+                  </div>
+              </div>
+          </div>
           <div class="container pt-5">
               <div class="row">
                   <div class="col-sm-12">
+                      
                       <lineChart v-if="lineChartData.datasets[0].data" :data="lineChartData" :options="lineChartOptions"></lineChart>
                   </div>
               </div>

@@ -4,16 +4,16 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="contact"  >
-                    <figure v-if="contact.avatar" class="contact__avatar">
-                        <img   :src="`http://localhost:8000/${contact.avatar}`" />
-                    </figure>
-                    <div>
-                        <!-- <contactAvatarUpload :contact="contact"></contactAvatarUpload> -->
-                        <div class="custom-file mb-4">
+                        <figure v-if="contact.avatar != 'null'" class="contact__avatar">
+                            <img :src="`http://localhost:8000/${contact.avatar}`" />
+                        </figure>
+                        <div v-else class="custom-file mb-4">
                             <input @change="onFileChanged" type="file" class="custom-file-input" id="customFile">
                             <label class="custom-file-label" for="customFile"><span v-if="filename" :v-model="filename">{{ filename }}</span><span v-else>Datei aussuchen</span></label>
-                            <button class="btn btn-primary btn-xl" @click="onUpload">Bild hochladen</button>
-                        </div>  
+                            
+                        </div>
+                        <button class="btn btn-primary btn-xl" @click="onUpload">Bild hochladen</button>
+                        <div>
                     </div>
                     <pageHeadline v-if="contact" :headline="`${contact.firstname} ${contact.lastname}`"></pageHeadline>
                     <table class="table table-dark table-bordered table-">
@@ -30,8 +30,13 @@
                         <td><input v-model="contact.street" type="text"></td>
                         </tr>
                         <tr>
-                        <th>DOB</th>
-                        <td><input v-model="contact.dob" type="date"></td>
+                            <th>DOB</th>
+                            <td>
+                                <!-- <input v-model="contact.dob" type="date"> -->
+                                <client-only>
+                                    <date-picker :value="contact.dob" format="dd.MM.yyyy"></date-picker>
+                                </client-only>
+                                </td>
                         </tr>
                         <tr>
                         <th>PLZ</th>
@@ -40,6 +45,16 @@
                         <tr>
                         <th>Stadt</th>
                         <td><input v-model="contact.city" type="text"></td>
+                        </tr>
+                        <tr>
+                        <th>Kategorie</th>
+                        <td>
+                            <select v-model="contact.category" class="form-control" name="" id="">
+                                <option :value="null" disabled hidden>Bitte wähle eine Kategorie aus</option>
+                                <option v-bind:key="category.name" v-for="category in contactCategories" v-bind:value="category.name">{{ category.name }}</option>
+                            </select>
+                            
+                            </td>
                         </tr>
                     </table>
                     <div class="btn-group">
@@ -56,14 +71,18 @@
 <script>
 import axios from "axios";
 import pageHeadline from "./../../components/global/pageHeadline"
+import datepicker from 'vuejs-datepicker';
 import contactAvatarUpload from "./../../components/contacts/contactAvatarUpload"
+
 import * as ContactService from "./../../services/contacts/ContactService"
+import * as ContactCategoryService from "./../../services/contacts/ContactCategoryService"
  
 export default {
     name: 'contactDetail',
     components: {
         pageHeadline,
-        contactAvatarUpload
+        contactAvatarUpload,
+        datepicker
     },
     data(){
         return{
@@ -137,7 +156,6 @@ export default {
                 axios.patch(url, this.contact)
                 this.success = true
                 setTimeout( () => { 
-                    console.log("TIMEOUT")
                     this.success = false 
                     }, 3000);
             } catch (error) {
@@ -150,13 +168,16 @@ export default {
         const url = `http://localhost:8000/api/contacts/${id}`
         this.contact = await ContactService.fetchContactById(url)
         this.contact.avatar = this.contact.avatar.replace(/['"]+/g, '')
+        this.contactCategories = await ContactCategoryService.fetchContactCategories()
     }
 }
 </script>
 
 <style lang="sass">
 .contact__avatar
-    border-radius: 50%
+    background: rgba(0,0,0,0.05)
+    border: 0
+    // border-radius: 50%
     width: 200px
     height: 200px
     overflow: hidden
@@ -180,5 +201,29 @@ td
         background: transparent
         width: 100%
         border: none
+
+.vdp-datepicker
+    display: block
+    position: absolute !important
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+
+    input
+        color: #fff !important
+
+    *
+        color: #111 !important
+select
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background: transparent
+    height: 100%
+    border: none
+    color: #fff
 
 </style>

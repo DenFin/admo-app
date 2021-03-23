@@ -60,7 +60,7 @@
                 </div>
                 <div class="modal-footer">
                     <button @click="closeModal" type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-                    <button @click="deleteContact(2)" type="button" class="btn btn-danger">Löschen</button>
+                    <button @click="deleteContact()" type="button" class="btn btn-danger">Löschen</button>
                 </div>
                 </div>
             </div>
@@ -71,6 +71,7 @@
 <script>
 import axios from "axios"
 import * as ContactService from "./../../services/contacts/ContactService"
+
 
 export default {
     name: 'contactsList',
@@ -195,7 +196,4 @@ a
 .table-dark td, .table-dark th, .table-dark thead th
     border-color: #063144
 
-.active
-    opacity: 1 !important
-    display: block
 </style>

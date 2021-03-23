@@ -10,9 +10,41 @@ class RevenueService {
     }
 
     async getRevenues() {
-
         const revenues = await Revenue.find()
         return revenues
+    }
+
+    /**
+     * Takes a billing as request
+     * Adds it billingTotal to the existing month revenue.
+     * @param {*} _req 
+     * @param {*} _res 
+     */
+    async addBillingToRevenues(_req, _res) {
+        try {
+            const reqBody = _req.body
+            const billingMonth = new Date(_req.body.date).toLocaleString('en-GB', { month: 'long' });
+            const billingTotal = parseFloat(_req.body.billingTotal)
+            const revenue = await Revenue.findOne({ month: billingMonth });
+
+            if (revenue) {
+                const amount = parseFloat(revenue.amount)
+                revenue.amount = amount + billingTotal
+                revenue.save()
+            } else {
+                let revenueTemp = new Revenue({
+                    month: billingMonth,
+                    amount: billingTotal
+                })
+
+                const newRevenue = await revenueTemp.save()
+                return newRevenue
+            }
+
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     checkIfMonthExists(_revenues) {
