@@ -2,6 +2,8 @@
 <html>
 
 <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
     <meta charset="utf-8">
     <title>A simple, clean, and responsive HTML invoice template</title>
     <style>
@@ -79,6 +81,17 @@
     }
     </style>
     <style>
+        html,
+        body {
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+        }
+        
         .text-blue {
             color: rgb(0, 44, 67);
         }
@@ -107,19 +120,25 @@
         }
         
         .sender {
-            background-color: #ccc;
+            border-bottom: 1px solid rgb(0, 44, 67);
             font-size: 8pt;
+            padding-bottom: 3px;
             position: absolute;
             left: 15mm;
             top: 27.528mm;
+            width: 55mm;
+            display: block;
         }
         
         .recipient {
-            background-color: #ccc;
+            background-color: #eee;
+            color: rgb(0, 44, 67);
             padding: 2mm;
             position: absolute;
             left: 15mm;
             top: 34mm;
+            width: 65mm;
+            height: 25mm;
         }
         
         .logo {
@@ -153,6 +172,15 @@
             top: 155mm;
             max-width: calc(297mm - 30mm);
         }
+        
+        table {
+            border-collapse: collapse;
+        }
+        
+        td {
+            border: 1px solid #fff;
+            padding: 1px;
+        }
     </style>
 </head>
 
@@ -161,14 +189,14 @@
     <div class="invoice-box">
         <div>
             <div class="logo">
-                <img src="./../assets/img/df_logo.png" alt="">
+                <img width="100px" src="./../assets/img/df_logo.png" alt="">
             </div>
         </div>
         <div class="sender text-blue">
             <span class="sender__name">Dennis Fink</span> | <span class="sender__street">Krefelder Str. 24</span> | 50670 Köln
         </div>
         <div class="recipient">
-            <span>{{client}}</span>
+            <span><b>{{client}}</b></span>
         </div>
 
         <div class="info">

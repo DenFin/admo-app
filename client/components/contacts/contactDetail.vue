@@ -1,21 +1,23 @@
 <template>
-  <section class="section-contact-detail">
-      <div class="container" v-if="contact" >
+    <section class="section-contact-detail">
+        <div class="container" v-if="contact" >
             <div class="row">
-                <div class="col-sm-12">
-                    <div class="contact"  >
-                        <figure v-if="contact.avatar != 'null'" class="contact__avatar">
+                <div class="col-sm-12 col-lg-3">
+                        <figure @click="showImageUploadForm" v-if="contact.avatar != 'null'" class="contact__avatar">
                             <img :src="`http://localhost:8000/${contact.avatar}`" />
                         </figure>
-                        <div v-else class="custom-file mb-4">
+                </div>
+                <div class="col-sm-12 col-lg-9">
+                    <div v-if="showImageUploadForm" class="custom-file">
                             <input @change="onFileChanged" type="file" class="custom-file-input" id="customFile">
                             <label class="custom-file-label" for="customFile"><span v-if="filename" :v-model="filename">{{ filename }}</span><span v-else>Datei aussuchen</span></label>
-                            
-                        </div>
-                        <button class="btn btn-primary btn-xl" @click="onUpload">Bild hochladen</button>
-                        <div>
                     </div>
-                    <pageHeadline v-if="contact" :headline="`${contact.firstname} ${contact.lastname}`"></pageHeadline>
+                    <button class="btn btn-primary btn-xl mt-2" @click="onUpload">Bild hochladen</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <pageHeadline class="mt-5" v-if="contact" :headline="`${contact.firstname} ${contact.lastname}`"></pageHeadline>
                     <table class="table table-dark table-bordered table-">
                         <tr>
                             <th>Vorname</th>
@@ -64,8 +66,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-  </section>
+    </section>
 </template>
 
 <script>
@@ -97,7 +98,8 @@ export default {
             contactCategories: null,
             success: false,
             error: false,
-            fileUploadComplete: false
+            fileUploadComplete: false,
+            showImageUpload: false
         }
     },
     methods: {
@@ -111,6 +113,9 @@ export default {
             console.log(file)
             this.filename = file.name
             this.contact.avatar = file
+        },
+        showImageUploadForm(){
+            this.showImageUpload = true;
         },
         async onUpload(event){
             event.preventDefault()

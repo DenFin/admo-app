@@ -69,6 +69,18 @@ exports.createBilling = async function(req, res, next) {
     }
 }
 
+exports.updateBilling = async function(req, res, next) {
+    console.log("CONTRLLER")
+    try {
+        await BillingServiceInstance.updateBilling(req.body)
+        res.status(201).json({ status: 201 })
+        next()
+    } catch (error) {
+        return res.status(500).json({ status: 500, message: error.message });
+    }
+}
+
+
 exports.addBillingToRevenues = async function(req, res, next) {
     try {
         await RevenueServiceInstance.addBillingToRevenues(req, res)

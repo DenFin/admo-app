@@ -2,11 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const puppeteer = require('puppeteer');
 const handlebars = require("handlebars");
-
-
 const Billing = require('../models/billing.model')
-
-
 
 class BillingService {
 
@@ -68,6 +64,39 @@ class BillingService {
         }
     }
 
+    async updateBilling(_billing) {
+        try {
+            const query = { _id: _billing._id };
+            const updatedBilling = {
+                $set: {
+                    nr: _billing.nr,
+                    client: _billing.client,
+                    title: _billing.title,
+                    date: _billing.date,
+                    dateRangeStart: _billing.dateRangeStart,
+                    dateRangeEnd: _billing.dateRangeEnd,
+                    status: _billing.status,
+                    items: JSON.stringify(_billing.items),
+                    billingTotal: _billing.billingTotal,
+                    billingTaxes: _billing.billingTaxes,
+                    billingTotalWithTaxes: _billing.billingTotalWithTaxes
+                }
+            }
+            const options = { "upsert": true };
+            Billing.updateOne(query, updatedBilling, options).then(result => {
+                    const { matchedCount, modifiedCount } = result;
+                    if (matchedCount && modifiedCount) {
+                        console.log(`Successfully edited billing.`)
+                    }
+                })
+                .catch(err => console.error(`Failed edit billing: ${err}`))
+
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     isDue() {
         const billing = this;
         const today = new Date();
@@ -86,25 +115,21 @@ class BillingService {
 
         // launch a new chrome instance
         const browser = await puppeteer.launch({
-            headless: true
-        })
-
-        // create a new page
+                headless: true
+            })
+            // create a new page
         const page = await browser.newPage()
         const data = _billing;
+        const year = data.date.getFullYear()
+        const month = data.date.getMonth() + 1
         data.items = JSON.parse(data.items)
         data.date = this.formatDate(data.date)
-
-
-
-
-        // set your html as the pages content
-        const templateHtml = fs.readFileSync(`${__dirname}/pdf-template.html`, 'utf8')
+        data.dateRangeStart = this.formatDate(data.dateRangeStart)
+        data.dateRangeEnd = this.formatDate(data.dateRangeEnd)
+            // set your html as the pages content
+        const templateHtml = fs.readFileSync(`${__dirname}/../templates/invoice-pdf-template.html`, 'utf8')
         const template = handlebars.compile(templateHtml);
         const html = template(data);
-        const pdfPath = `${__dirname}/my-fance-invoice-4.pdf`
-
-
         const options = {
             width: '1230px',
             headerTemplate: "<p></p>",
@@ -115,17 +140,15 @@ class BillingService {
                 bottom: "30px"
             },
             printBackground: true,
-            path: pdfPath
         }
 
+        this.createFolderStructure(year, month)
 
         await page.setContent(html, {
-            waitUntil: 'domcontentloaded'
-        })
-
-        // await page.emulateMedia('screen');
-
-        // create a pdf buffer
+                waitUntil: 'domcontentloaded'
+            })
+            // await page.emulateMedia('screen');
+            // create a pdf buffer
         const pdfBuffer = await page.pdf({
             format: 'A4'
         })
@@ -133,7 +156,7 @@ class BillingService {
         // or a .pdf file
         await page.pdf({
             format: 'A4',
-            path: `${__dirname}/${data.nr}.pdf`,
+            path: `${__dirname}/../files/invoices/${year}/${month}/${data.nr}.pdf`,
             printBackground: true
         })
 
@@ -142,15 +165,38 @@ class BillingService {
 
     }
 
-
-
     formatDate(_date) {
         let date = new Date(_date)
         let day = date.getDate();
         let year = date.getFullYear();
         let month = date.getMonth();
         month = date.toLocaleString('default', { month: 'long' });
+        console.log({ date, month })
         return `${day}. ${month} ${year}`;
+    }
+
+    createFolderStructure(_year, _month) {
+        const baseDir = 'files/invoices/'
+        const currentYearDir = `${baseDir}${_year}`
+        const currentMonthDir = `${baseDir}${_year}/${_month}`
+        if (!fs.existsSync(currentYearDir)) {
+            console.log(currentYearDir + " does not exist")
+            fs.mkdirSync(currentYearDir, {
+                recursive: true
+            });
+            if (!fs.existsSync(currentMonthDir)) {
+                fs.mkdirSync(currentMonthDir, {
+                    recursive: true
+                });
+            }
+        } else {
+            console.log(currentYearDir + " does exist")
+            if (!fs.existsSync(currentMonthDir)) {
+                fs.mkdirSync(currentMonthDir, {
+                    recursive: true
+                });
+            }
+        }
     }
 
 }

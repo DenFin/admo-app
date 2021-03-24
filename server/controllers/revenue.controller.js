@@ -16,3 +16,21 @@ exports.getRevenues = async function(req, res, next) {
         return res.status(400).json({ status: 400, message: e.message });
     }
 }
+
+exports.recalculateRevenues = async function(req, res) {
+    console.log("=== REVENUE CONTROLLER ===")
+    try {
+
+        // GET ALL BILLINGS FROM MONTH OF CHANGED BILLING
+        // CUMULATE THEIR BILLING TOTAL
+        // CHECK IF MONTH EXISTS
+        // GET MONTH REVENUE FROM DATABASE
+        // SET CUMULATED VALUE TO MONTH REVENUE
+
+        let reqBody = req.body
+        console.log(reqBody)
+    } catch (error) {
+        console.log(error)
+    }
+
+}

@@ -16,7 +16,6 @@ class ContactService {
     }
 
 
-
     async getAllContacts() {
         const contacts = await Contact.find()
         return contacts;
@@ -150,9 +149,6 @@ class ContactService {
 
         }
     }
-
-
-
 
     getNextBirthdays(contacts) {
         let nextBirthdays = [];
