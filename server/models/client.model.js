@@ -19,4 +19,16 @@ const clientSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Client', clientSchema);
+
+
+clientSchema.statics.getAllClients = async function getAllClients() {
+    return Client.find()
+}
+
+clientSchema.methods.createClient = async function createClient() {
+    this.save()
+}
+
+// module.exports = mongoose.model('Client', clientSchema);
+const Client = mongoose.model('Client', clientSchema);
+module.exports = Client

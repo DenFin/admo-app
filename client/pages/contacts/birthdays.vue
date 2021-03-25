@@ -7,8 +7,12 @@
                         <pageHeadline headline="Geburtstage"></pageHeadline>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <contactsSubmenu></contactsSubmenu>
+                    </div>
+                </div>
             </div>
-            <contactsSubmenu></contactsSubmenu>
             <contactsNextBirthdaysList></contactsNextBirthdaysList>
         </main>
     </div>

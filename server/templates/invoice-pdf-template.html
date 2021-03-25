@@ -169,8 +169,16 @@
             position: absolute;
             left: 15mm;
             right: 15mm;
-            top: 155mm;
+            top: 165mm;
             max-width: calc(297mm - 30mm);
+        }
+        
+        .my-info {
+            color: rgb(0, 44, 67);
+            text-align: right;
+            position: absolute;
+            top: 32mm;
+            right: 15mm;
         }
         
         table {
@@ -181,6 +189,10 @@
             border: 1px solid #fff;
             padding: 1px;
         }
+        
+        h1 {
+            line-height: 24px;
+        }
     </style>
 </head>
 
@@ -189,8 +201,21 @@
     <div class="invoice-box">
         <div>
             <div class="logo">
-                <img width="100px" src="./../assets/img/df_logo.png" alt="">
+                <img width="100px" src="https://www.dennisfink.de/home/docs/img/df_schriftzug_rechts.svg" alt="">
             </div>
+        </div>
+        <div class="my-info">
+            <span><b>Dennis Fink</b></span><br>
+            <span>Krefelder Straße 24</span><br>
+            <span>50670 Köln</span><br><br>
+            <span>0160 609 1990</span>
+            <span>kontakt@dennisfink.de</span><br>
+            <span>dennisfink.de</span><br><br>
+            <span><b>Volksbank Düren</b></span><br>
+            <span>IBAN: DE95 3956 0201 0306 9820 10</span><br>
+            <span>BIC: GENODED1DUE</span><br><br>
+            <span><b>Steuernummer</b></span><br>
+            <span>218/5061/4268</span>
         </div>
         <div class="sender text-blue">
             <span class="sender__name">Dennis Fink</span> | <span class="sender__street">Krefelder Str. 24</span> | 50670 Köln

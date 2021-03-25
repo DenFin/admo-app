@@ -5,7 +5,13 @@
                 <pageHeadline headline="Kategorien"></pageHeadline>
                 <createNewItemButton path="categories/create" title="Neue Kategorie hinzufügen"></createNewItemButton>
             </div>
-            <contactsSubmenu></contactsSubmenu>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <contactsSubmenu></contactsSubmenu>
+                    </div>
+                </div>
+            </div>
             <div class="container mt-4">
                 <div class="row">
                     <div class="col-sm-12 col-lg-6">

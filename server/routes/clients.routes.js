@@ -1,15 +1,43 @@
 const express = require('express')
 const router = express.Router()
-const Client = require('../models/client')
+const Client = require('../models/client.model')
 
-router.get('/', async(req, res) => {
-    try {
-        const clients = await Client.find()
-        res.json(clients)
-    } catch (error) {
-        res.status(500).json({ message: error.message })
-    }
-})
+const ClientController = require("../controllers/client.controller")
+
+router.get('/', ClientController.getAllClients)
+
+router.post('/', ClientController.createClient)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 router.get('/:id', getClient, (req, res) => {
 

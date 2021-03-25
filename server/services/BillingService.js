@@ -97,6 +97,12 @@ class BillingService {
         }
     }
 
+    async deleteBilling(_id) {
+        console.log(_id)
+        const deletedBilling = await Billing.deleteOne({ _id: _id })
+        return deletedBilling
+    }
+
     isDue() {
         const billing = this;
         const today = new Date();
@@ -148,7 +154,15 @@ class BillingService {
                 waitUntil: 'domcontentloaded'
             })
             // await page.emulateMedia('screen');
-            // create a pdf buffer
+        await page.focus('body');
+        const session = await page.target().createCDPSession();
+        await session.send('DOM.enable');
+        await session.send('CSS.enable');
+        session.on('CSS.fontsUpdated', event => {
+            console.log(event);
+            // event will be received when browser updates fonts on the page due to webfont loading.
+        });
+        // create a pdf buffer
         const pdfBuffer = await page.pdf({
             format: 'A4'
         })

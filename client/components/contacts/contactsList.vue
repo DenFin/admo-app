@@ -1,48 +1,44 @@
 <template>
     <section class="contactsList">
-        <div class="container">
-            <div v-if="contacts" class="row pt-3">
-                <div class="col-sm-12">
-                    <div>
-                        <table class="table table-dark table-bordered table-sm table-condensed">
-                            <thead>
-                                <th>Vorname</th>
-                                <th>Nachname</th>
-                                <th>DOB</th>
-                                <th>Street</th>
-                                <th>ZIP</th>
-                                <th>City</th>
-                                <th>Actions</th>
-                            </thead>
-                            <tbody>
-                                <tr v-bind:key="contact.name" v-for="contact in contacts">
-                                    
-                                    <td><nuxt-link :to="`/contacts/${contact._id}`">{{ contact.firstname }}</nuxt-link></td>
-                                    <td>{{ contact.lastname }}</td>
-                                    <td>{{ contact.dob }}</td>
-                                    <td>{{ contact.street }}</td>
-                                    <td>{{ contact.zip }}</td>
-                                    <td>{{ contact.city }}</td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <nuxt-link class="dropdown-item" :to="`/contacts/${contact._id}`">Kontakt bearbeiten</nuxt-link>
-                                                <a class="dropdown-item" href="#"><span :data-id="contact._id" @click="openModal(contact._id)" class="i i--delet">Kontakt löschen</span></a>
-                                            </div>
-                                            </div>
-                                        </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        <div v-if="contacts" class="pt-3">
+            <div>
+                <table class="table table-dark table-bordered table-sm table-condensed">
+                    <thead>
+                        <th>Vorname</th>
+                        <th>Nachname</th>
+                        <th>DOB</th>
+                        <th>Street</th>
+                        <th>ZIP</th>
+                        <th>City</th>
+                        <th>Actions</th>
+                    </thead>
+                    <tbody>
+                        <tr v-bind:key="contact.name" v-for="contact in contacts">
+                            
+                            <td><nuxt-link :to="`/contacts/${contact._id}`">{{ contact.firstname }}</nuxt-link></td>
+                            <td>{{ contact.lastname }}</td>
+                            <td>{{ contact.dob }}</td>
+                            <td>{{ contact.street }}</td>
+                            <td>{{ contact.zip }}</td>
+                            <td>{{ contact.city }}</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <nuxt-link class="dropdown-item" :to="`/contacts/${contact._id}`">Kontakt bearbeiten</nuxt-link>
+                                        <a class="dropdown-item" href="#"><span :data-id="contact._id" @click="openModal(contact._id)" class="i i--delet">Kontakt löschen</span></a>
+                                    </div>
+                                    </div>
+                                </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div v-else class="row">
-                <div class="col-sm-12">
-                    <p>Keine Kontakt vorhanden.</p>
-                </div>
+        </div>
+        <div v-else class="row">
+            <div class="col-sm-12">
+                <p>Keine Kontakt vorhanden.</p>
             </div>
         </div>
         <!-- Modal -->

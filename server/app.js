@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { handleError } = require('./helpers/error')
+const { handleError, ErrorHandler } = require('./helpers/error')
 
 
 
@@ -34,7 +34,7 @@ app.use((err, req, res, next) => {
 const authRouter = require("./routes/auth")
 const contactsRouter = require("./routes/contacts.routes")
 const contactCategoriesRouter = require("./routes/contactCategories.routes")
-const clientsRouter = require("./routes/clients")
+const clientsRouter = require("./routes/clients.routes")
 const billingsRouter = require("./routes/billing.routes")
 const revenuesRouter = require("./routes/revenues.routes")
 

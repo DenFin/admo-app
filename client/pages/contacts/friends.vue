@@ -7,12 +7,13 @@
                         <pageHeadline headline="Freunde"></pageHeadline>
                     </div>
                 </div>
-            </div>
-            <contactsSubmenu></contactsSubmenu>
-            <div>
                 <div class="row">
                     <div class="col-sm-12">
-                        
+                        <contactsSubmenu></contactsSubmenu>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
                         <contactsList></contactsList>
                     </div>
                 </div>

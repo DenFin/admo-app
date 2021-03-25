@@ -1,35 +1,23 @@
 <template>
     <div id="content" class="pt-5">
-        <main>
-            <alertSuccess success="false"></alertSuccess>
-            <alertError error="false"></alertError>
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="d-flex align-items-center justify-content-between">
-                                <pageHeadline headline="Kontakte"></pageHeadline>
+        <main class="page-wrapper">
+            <section id="top" class="panel">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <pageHeadline headline="Dies ist die Headline"></pageHeadline>
                                 <createNewItemButton path="contacts/create" title="Neuen Kontakt hinzufügen"></createNewItemButton>
-                            </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <contactsSubmenu></contactsSubmenu>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <contactsSubmenu></contactsSubmenu>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <contactsList></contactsList>
-                    </div>
-                </div>
-            </div>
-            
+            </section>
         </main>
     </div>
 </template>
@@ -43,6 +31,7 @@ import alertSuccess from "./../../components/alerts/alertSuccess"
 import alertError from "./../../components/alerts/alertError"
 
 export default {
+    name: 'test',
     components: {
         pageHeadline,
         createNewItemButton,
@@ -53,3 +42,7 @@ export default {
     }
 }
 </script>
+
+<style>
+
+</style>

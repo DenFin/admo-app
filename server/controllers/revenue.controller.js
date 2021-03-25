@@ -1,5 +1,6 @@
 const RevenueService = require("../services/RevenueService")
 const RevenueServiceInstance = new RevenueService()
+const Billing = require("./../models/billing.model")
 
 exports.getRevenues = async function(req, res, next) {
     const page = req.params.page ? req.params.page : 1;
@@ -20,15 +21,28 @@ exports.getRevenues = async function(req, res, next) {
 exports.recalculateRevenues = async function(req, res) {
     console.log("=== REVENUE CONTROLLER ===")
     try {
+        let reqBody = req.body
+        let date = new Date(reqBody.date)
+        let month = date.toLocaleString('de-DE', { month: 'long' })
+        console.log({ date, month })
+
 
         // GET ALL BILLINGS FROM MONTH OF CHANGED BILLING
+        const billings = await Billing.find()
+            .where(date.toLocaleString('de-DE', { month: 'long' }))
+            .equals(month);
+        console.log(billings)
+
+
         // CUMULATE THEIR BILLING TOTAL
         // CHECK IF MONTH EXISTS
         // GET MONTH REVENUE FROM DATABASE
         // SET CUMULATED VALUE TO MONTH REVENUE
 
-        let reqBody = req.body
-        console.log(reqBody)
+
+
+
+
     } catch (error) {
         console.log(error)
     }

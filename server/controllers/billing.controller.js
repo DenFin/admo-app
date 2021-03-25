@@ -80,6 +80,10 @@ exports.updateBilling = async function(req, res, next) {
     }
 }
 
+exports.deleteBilling = async function(req, res, next) {
+    await BillingServiceInstance.deleteBilling(req.params.id)
+    res.status(200).json({ status: 200 })
+}
 
 exports.addBillingToRevenues = async function(req, res, next) {
     try {
@@ -91,5 +95,5 @@ exports.addBillingToRevenues = async function(req, res, next) {
 
 exports.createBillingPdf = function() {
     BillingServiceInstance.createPDF();
-    return res.status(200).json({ status: 201 })
+    return res.status(201).json({ status: 201 })
 }

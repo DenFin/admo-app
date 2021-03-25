@@ -14,12 +14,6 @@ class RevenueService {
         return revenues
     }
 
-    /**
-     * Takes a billing as request
-     * Adds it billingTotal to the existing month revenue.
-     * @param {*} _req 
-     * @param {*} _res 
-     */
     async addBillingToRevenues(_req, _res) {
         try {
             const reqBody = _req.body
@@ -45,21 +39,6 @@ class RevenueService {
         } catch (error) {
             console.log(error)
         }
-    }
-
-    checkIfMonthExists(_revenues) {
-
-        let bool;
-
-        _revenues.forEach(revenue => {
-            if (revenue.month == "March") {
-                bool = true
-            } else {
-                bool = true
-            }
-        })
-        return bool
-
     }
 
     async calculateAllExistingRevenues() {
@@ -102,6 +81,37 @@ class RevenueService {
 
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    checkIfMonthExists(_revenues) {
+
+        let bool;
+
+        _revenues.forEach(revenue => {
+            if (revenue.month == "March") {
+                bool = true
+            } else {
+                bool = true
+            }
+        })
+        return bool
+
+    }
+
 
 
 }

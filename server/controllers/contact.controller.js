@@ -69,6 +69,7 @@ exports.updateContactById = async function(req, res) {
 exports.deleteContactById = async function(req, res) {
     try {
         await ContactServiceInstance.deleteContactById(req, res)
+        res.status(200).json({ status: 200 })
     } catch (error) {
         return res.json({ status: 500, message: error.message });
     }
