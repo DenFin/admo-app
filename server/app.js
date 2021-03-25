@@ -3,18 +3,34 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const { handleError } = require('./helpers/error')
 
+
+
+/**
+ * DATABASE
+ */
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
 mongoose.set('useFindAndModify', false);
-const db = mongoose.connection
 
+const db = mongoose.connection
 db.on('error', (error) => console.log(error))
 db.once('open', () => console.log("Connected to database"))
 
+
+/**
+ * MIDDLEWARE
+ */
 app.use(express.json())
 app.use(cors());
 app.use("/uploads", express.static('uploads'));
+app.use((err, req, res, next) => {
+    handleError(err, res);
+});
 
+/**
+ * ROUTES
+ */
 const authRouter = require("./routes/auth")
 const contactsRouter = require("./routes/contacts.routes")
 const contactCategoriesRouter = require("./routes/contactCategories.routes")
